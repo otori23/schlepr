@@ -1,0 +1,11 @@
+1) Users
+
+- how to login in user on succesful registration; is this done from client side ? See instructor's code
+- how to logout when using jwt; is this done by front-end client ? See instructor's code
+- add a schlepr user; and maybe redesign the way the verify middlewares are used
+- still look to explore passport built-in in method for verify or protecting routes
+- test the User's getName method; is User.methods === User.prototype ???
+
+2) MongoDB
+
+- the schlepr database shows up in the database server after your application has inserted at least one document into one collection
