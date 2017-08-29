@@ -1,1 +1,5 @@
 schlepr-server/node_modules/
+schlepr-server/public/
+
+schlepr-client/node_modules/
+schlepr-client/dist/

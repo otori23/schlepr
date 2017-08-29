@@ -1,3 +1,22 @@
+- setup your gulp file
+- install all bower packages using npm package options (e.g. bootstrap)
+- install the npm packages needed by the gulp file
+- install ui-router as an npm package
+- $resource (install its package using npm)
+- ng-annotate
+
+Test out which works
+
+// no arg passsed into the callback
+var entry = Entry.get({ id: $scope.id }, function() {
+  console.log(entry);
+});
+
+// not using the return value from .query(); using callback arg to assign value into $scope field
+Post.query(function(data) {
+  $scope.posts = data;
+});
+
 1) Users
 
 - how to login in user on succesful registration; is this done from client side ? See instructor's code
@@ -9,3 +28,32 @@
 2) MongoDB
 
 - the schlepr database shows up in the database server after your application has inserted at least one document into one collection
+
+3) $resource
+
+// returns a resource class object
+$resource('/api/entries/:id');
+
+// Entry in a resource class object (injected into controller)
+// note: return value of .get() is assigned to a var; so no need to get the return value in the .get() callback 
+// var entry: think of as instance of Entry class; a representation of server side Mongo document
+var entry = Entry.get({ id: $scope.id }, function() {
+  console.log(entry);
+});
+
+// create an intanse of the Entry class
+// document is empty at this point
+$scope.entry = new Entry();
+
+// two ways of getting a return value from call to $resource methods
+
+// no arg passsed into the callback
+var entry = Entry.get({ id: $scope.id }, function() {
+  console.log(entry);
+});
+
+// from callback
+// no arg passsed into the callback
+Entry.get({ id: $scope.id }, function(data) {
+  $scope.entry = data;
+});
