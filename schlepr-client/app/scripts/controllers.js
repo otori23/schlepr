@@ -2,12 +2,81 @@
 
 angular.module('schleprApp')
 
-.controller('HeaderController', ['$scope', function ($scope) {
+.controller('HeaderController', ['$scope', '$uibModal', '$log', '$state', '$rootScope', '$localStorage', 'AuthFactory', 
+    function ($scope, $uibModal, $log, $state, $rootScope, $localStorage, AuthFactory) {
     $scope.isNavCollapsed = true;
+    $scope.loggedIn = false;
+    $scope.username = '';
+    $scope.loginData = $localStorage.getObject('userinfo','{}');
+    
+    if(AuthFactory.isAuthenticated()) {
+        $scope.loggedIn = true;
+        $scope.username = AuthFactory.getUsername();
+    }
+
+    $scope.openRegister = function () {
+        var registerModalInstance = $uibModal.open({
+            templateUrl: 'views/register.html',
+            controller: 'RegisterController'
+        });
+
+        registerModalInstance.result.then(function () {
+            $log.info('Registration Modal closed at: ' + new Date());
+            }, function () {
+                $log.info('Registration Modal dismissed at: ' + new Date());
+            }
+        );
+    };
+
+    $scope.doLogin = function() {
+        $log.info('Do login: ' + new Date());
+        if($scope.rememberMe) {
+            $localStorage.storeObject('userinfo',$scope.loginData);
+        }
+        AuthFactory.login($scope.loginData);
+    };
+    
+    $scope.logOut = function() {
+        AuthFactory.logout();
+        $scope.loggedIn = false;
+        $scope.username = '';
+        if(!$scope.rememberMe) {
+            $scope.loginData.password = '';
+        }
+    };
+    
+    $rootScope.$on('login:Successful', function () {
+        $scope.loggedIn = AuthFactory.isAuthenticated();
+        $scope.username = AuthFactory.getUsername();
+    });
+        
+    $rootScope.$on('registration:Successful', function () {
+        $scope.loggedIn = AuthFactory.isAuthenticated();
+        $scope.username = AuthFactory.getUsername();
+    });
+    
+    $scope.stateis = function(curstate) {
+       return $state.is(curstate);  
+    };
 }])
 
-.controller('HomeController', ['$scope', function ($scope) {
+.controller('RegisterController', ['$scope', '$uibModalInstance', '$log', 'AuthFactory', function ($scope, $uibModalInstance, $log, AuthFactory) {
+    $scope.registerData={};
+
+    $scope.doRegister = function() {
+        $log.info('Doing registration', $scope.registerData);
+        AuthFactory.register($scope.registerData);
+        $uibModalInstance.close();
+    };
+
+    $scope.closeThisDialog = function() {
+        $uibModalInstance.dismiss();
+    };
 }])
+
+.controller('HomeController', [function () {
+}])
+;
 
 /*
 .controller('MenuController', ['$scope', 'menuFactory', 'favoriteFactory', function ($scope, menuFactory, favoriteFactory) {
@@ -318,5 +387,5 @@ angular.module('schleprApp')
         ngDialog.close();
 
     };
-}])*/
-;
+}])
+;*/

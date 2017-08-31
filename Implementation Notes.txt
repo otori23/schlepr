@@ -1,21 +1,10 @@
-- setup your gulp file
-- install all bower packages using npm package options (e.g. bootstrap)
-- install the npm packages needed by the gulp file
-- install ui-router as an npm package
-- $resource (install its package using npm)
-- ng-annotate
+- put controllers & services in a different module; load when main module
+- jumbotron is not in the header it is in content
+- jumbotron look some thing like confusion's jumbotron but use the hand/box logo
 
-Test out which works
-
-// no arg passsed into the callback
-var entry = Entry.get({ id: $scope.id }, function() {
-  console.log(entry);
-});
-
-// not using the return value from .query(); using callback arg to assign value into $scope field
-Post.query(function(data) {
-  $scope.posts = data;
-});
+<header> -> look @ twitter's header
+<content> -> cards (cards show summary; clicking on cards show modal with more details; can add comments)
+<footer>
 
 1) Users
 
@@ -57,3 +46,25 @@ var entry = Entry.get({ id: $scope.id }, function() {
 Entry.get({ id: $scope.id }, function(data) {
   $scope.entry = data;
 });
+
+4) Header
+
+- try again to add "remember me" checkbox
+- login and registration form validation; something basic; re-enter password ?
+- change on successfull login; with ability to logout (ng-if vs ng-show ?)
+- on bad login where is the 401 message being printed to console ? from ui-bootstrap modal ? see docs, maybe option to stop logs ?
+- confirm that registering new users will work
+- what is going on with $state ? angular-ui or angular core ?
+- commit to git
+
+5) $log
+
+app.config(function($logProvider) {
+  $logProvider.debugEnabled(true);
+});
+
+6) Logo
+
+Google search: "hand outline holding box"
+
+disable all logs at once, rather than delete them line by line manually.
