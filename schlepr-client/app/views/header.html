@@ -21,12 +21,33 @@
                 </div>
                 <button type="submit" class="btn btn-success">Sign in</button>  
                 <div class="form-group form-group-block">
-                    <a ng-click="openRegister()" href="#">Register</a>
+                    <a ng-click="openRegisterModal()" href="#">Register</a>
                 </div>
             </form>
             <ul class="nav navbar-nav navbar-right" ng-if="loggedIn">
-                <li><a href="#"><span class="glyphicon glyphicon-user"></span> {{username}} </a></li>
-                <li><a href="#" ng-click="logOut()"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+                <li>
+                    <form class="navbar-form">
+                    <div class="form-group has-feedback">
+                        <input type="text" class="form-control" placeholder="Search">
+                        <span class="glyphicon glyphicon-search form-control-feedback" aria-hidden="true"></span>
+                    </div>
+                    </form>
+                </li>
+                <li id="nav-user-dropdown">
+                    <div class="btn-group" uib-dropdown is-open="status.isopen">
+                        <button type="button" class="btn btn-default navbar-btn" uib-dropdown-toggle ng-disabled="disabled">
+                        <span class="glyphicon glyphicon-user"></span>
+                        </button>
+                        <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="single-button">
+                            <li role="menuitem"><a><strong>&#64;{{username}}</strong></a></li>
+                            <li class="divider"></li>
+                            <li role="menuitem"><a href="#" ng-click="logOut()"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li id="nav-add-new">
+                    <button type="button" class="btn btn-primary navbar-btn" ng-click="openRequestModal()"><strong>Request</strong></button>
+                </li>
             </ul>
         </div>
     </div>

@@ -90,6 +90,7 @@ angular.module('schleprApp')
     
   authFac.logout = function() {
     $resource(baseURL + "users/logout").get(function(response){
+        $rootScope.$broadcast('logout:Successful');
     });
     destroyUserCredentials();
   };
@@ -133,18 +134,51 @@ angular.module('schleprApp')
   loadUserCredentials();
   
   return authFac;   
-}]);
-/*
-.factory('menuFactory', ['$resource', 'baseURL', function ($resource, baseURL) {
-
-        return $resource(baseURL + "dishes/:id", null, {
-            'update': {
-                method: 'PUT'
-            }
-        });
-
 }])
 
+.factory('PackageFactory', ['$resource', '$uibModal', 'baseURL', function ($resource, $uibModal, baseURL) {
+  var packageFac = {};
+  var packageResource = $resource(baseURL + "packages/:id", null, {'update': {method: 'PUT'}});
+
+  packageFac.save = function(packageData) {
+    packageResource
+    .save(packageData,
+      function() {
+          var message =
+          '<div class="modal-header">' +
+          '<h3 class="modal-title id="modal-title-request">Success!</h3>' +
+          '</div>' +
+          '<div class="modal-body" id="modal-body-request">' + 
+          '<p>' +  "All good. Your request was saved!"  + '</p>' +
+          '</div>' +
+          '<div class="modal-footer">' +
+          '<button type="button" class="btn btn-primary" ng-click=$close()>OK</button>' +
+          '</div>';
+
+          $uibModal.open({ template: message, backdrop: false });
+      },
+      function() {
+          var message =
+          '<div class="modal-header">' +
+          '<h3 class="modal-title id="modal-title-request">Unable to Save Your Request!</h3>' +
+          '</div>' +
+          '<div class="modal-body" id="modal-body-request">' + 
+          '<p>' +  "There was an error saving your request to server!"  + '</p>' +
+          '</div>' +
+          '<div class="modal-footer">' +
+          '<button type="button" class="btn btn-primary" ng-click=$close()>OK</button>' +
+          '</div>';
+
+          $uibModal.open({ template: message, backdrop: false });
+      }
+    );
+  };
+
+  return packageFac;
+}])
+;
+
+/*
 .factory('commentFactory', ['$resource', 'baseURL', function ($resource, baseURL) {
 
         return $resource(baseURL + "dishes/:id/comments/:commentId", {id:"@Id", commentId: "@CommentId"}, {

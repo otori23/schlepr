@@ -6,6 +6,14 @@
 <content> -> cards (cards show summary; clicking on cards show modal with more details; can add comments)
 <footer>
 
+- use mongoose validation to implement the server-side validation of all form data
+(add client size validation later)
+
+- nav toggle menu on small screens: use media query to hide and show the apporpriate list items
+- clean-up the jumbotron section
+- login/logout information should be global - run the event handlers globally and not in each controller (see the ionic project as an example)
+- using the refresh button on the browser is wonky; app thinks I have logged out; takes me to login page with password filled in ??? What is going on here ???
+
 1) Users
 
 - how to login in user on succesful registration; is this done from client side ? See instructor's code
@@ -57,6 +65,12 @@ Entry.get({ id: $scope.id }, function(data) {
 - what is going on with $state ? angular-ui or angular core ?
 - commit to git
 
+4a) ui-bootstrap.modal
+
+- had trouble getting google places and moment date picker to work well with the modal
+- google places: had to use custom CSS to set z-index for modal and its backdrop (make lower so can see other things on top of it)
+- moment.js date/time picker : just could not get this to show properly; so used a standard html5 input type <input type="datetime-local">
+
 5) $log
 
 app.config(function($logProvider) {
@@ -68,3 +82,115 @@ app.config(function($logProvider) {
 Google search: "hand outline holding box"
 
 disable all logs at once, rather than delete them line by line manually.
+
+7) Packages Router
+
+- on some of the endpoints verify that a user can actually perform the aciton; e.g. delete or update only their own posts; see .delete of: '/:packageId/comments/:commentId'
+
+8) Place
+https://gist.github.com/VictorBjelkholm/6687484
+http://ngmodules.org/modules/ngAutocomplete
+
+- what to store: just string from textbox; the detail contains lng/lat data what to do with this ?
+- what are implications of using google places api without an api key ?
+
+<input type="text" id="Autocomplete2" class="form-control" ng-autocomplete ng-model="package.adderss" details="package.details"/>
+
+9) Date (& Time)
+http://indrimuska.github.io/angular-moment-picker/
+- probably just use the ui-bootstrap version
+- nah ended up using moment.js
+- moment().toDate();
+
+10) Images
+https://stackoverflow.com/questions/4796914/store-images-in-a-mongodb-database
+http://ngmodules.org/modules/ng-file-upload
+
+10a) What does enctype='multipart/form-data' mean in an HTML form and when should we use it?
+https://stackoverflow.com/questions/4526273/what-does-enctype-multipart-form-data-mean
+
+<form action="/" method="post" enctype="multipart/form-data">
+
+When you make a POST request, you have to encode the data that forms the body of the request in some way.
+
+HTML forms provide three methods of encoding.
+
+application/x-www-form-urlencoded (the default)
+multipart/form-data
+text/plain
+
+Work was being done on adding application/json, but that has been abandoned.
+
+The specifics of the formats don't matter to most developers. The important points are:
+
+When you are writing client-side code, all you need to know is use multipart/form-data when your form includes any <input type="file"> elements.
+
+When you are writing server-side code: Use a prewritten form handling library (e.g. Perl's CGI->param or the one exposed by PHP's $_POST superglobal) and it will take care of the differences for you. Don't bother trying to parse the raw input received by the server.
+
+Never use text/plain.
+
+10b) Multer - middleware for handling multipart/form-data
+https://www.npmjs.com/package/multer
+
+10c) Store/display an image in mongodb using mongoose/express
+https://gist.github.com/aheckmann/2408370
+
+10d) MongoDB - GridFS
+https://docs.mongodb.com/manual/core/gridfs/
+
+- specification for storing and retrieving files that exceed the BSON-document size limit of 16 MB
+- see docs for when it is appropriate to use
+- maybe use only in cases where documents are bigger than 16 MB
+(for app limiting image to <= 5MB)
+
+10e) gridfs-stream - Easily stream files to and from MongoDB GridFS.
+https://github.com/aheckmann/gridfs-stream
+
+- read entire doc to understand how to use
+
+10e.1) How To Upload Images to MongoDB using Express/Imgur clone
+https://dinosaurscode.xyz/nodejs/2016/04/12/how-to-upload-images-to-mongodb-using-express/
+
+- uses gridfs stream in example
+- note: no mongoose at this point
+
+10#) mongoose-gridfs - builds in gridfs-stream
+https://github.com/lykmapipo/mongoose-gridfs
+
+- wrap gridfs-stream to provide valid mongoose schema and model to use with MongoDB GridFS
+- incorporates the Mongoose layer
+- read full doc to understand how to use it
+
+11) Web Components - https://www.webcomponents.org/introduction
+
+- see section @ bottom listing all other web component libraries/tools
+
+12) Directives and Components
+
+- writing angular 1.6 directives ?
+
+
+
+{
+	"username" : "jane_doe",
+	"password" : "12345"
+}
+
+[{"key":"x-access-token","value":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImphbmVfZG9lIiwiX2lkIjoiNTlhMjY1ZmFjYTc1ZTQwZDA4NDE2NTkwIiwiYWRtaW4iOmZhbHNlLCJpYXQiOjE1MDQzMzMwNjYsImV4cCI6MTUwNDMzNjY2Nn0.VAYmyCVcHgV1QwajUz2CMkbIlDsSwLFnPTHvMlxPsrM","description":""}]
+
+{
+	"title": "Couch",
+	"from" : {
+		"address" :"address from",
+		"details" : {x: 10}
+	}
+	"to" : {
+		"address" :"address to",
+		"details" : {x: 20}
+	},
+	"detail": "move detials"
+}
+
+13) Mongoose Schema Built-in required validator
+
+- failing required validation sends back an html response "500 Internal Server Error"; can't show another modal.

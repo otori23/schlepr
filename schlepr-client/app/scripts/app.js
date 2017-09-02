@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('schleprApp', ['ngResource', 'ui.bootstrap', 'ui.router'])
+angular.module('schleprApp', ['ngResource', 'ui.bootstrap', 'ui.router', 'ngAutocomplete', 'moment-picker'])
 .config(['$stateProvider', '$urlRouterProvider', '$locationProvider', function($stateProvider, $urlRouterProvider, $locationProvider) {
     $locationProvider.hashPrefix('');
 
@@ -82,4 +82,22 @@ angular.module('schleprApp', ['ngResource', 'ui.bootstrap', 'ui.router'])
     });*/
 
     $urlRouterProvider.otherwise('/'); 
-}]);
+}])
+
+.run(['$rootScope', 'AuthFactory', function($rootScope, AuthFactory) {
+    $rootScope.$on('login:Successful', function () {
+        $rootScope.loggedIn = AuthFactory.isAuthenticated();
+        $rootScope.username = AuthFactory.getUsername();
+    });
+        
+    $rootScope.$on('registration:Successful', function () {
+        $rootScope.loggedIn = AuthFactory.isAuthenticated();
+        $rootScope.username = AuthFactory.getUsername();
+    });
+
+    $rootScope.$on('logout:Successful', function () {
+        $rootScope.loggedIn = AuthFactory.isAuthenticated();
+        $rootScope.username = AuthFactory.getUsername();
+    });
+}])
+;

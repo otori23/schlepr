@@ -11,3 +11,27 @@ body {
   color: #FFFFFF;
   font-size: 14px;
 }
+
+#nav-user-dropdown button {
+	border-radius: 50%;
+}
+
+#nav-add-new {
+	padding-left: 10px;
+}
+
+#nav-add-new button {
+	border-radius: 100px;
+}
+
+.request-modal-z-index {
+	z-index: 20 !important;
+}
+
+.request-modal-backdrop-z-index {
+	z-index: 10 !important;
+}
+
+.moment-picker {
+	z-index: 2000 !important;
+}
