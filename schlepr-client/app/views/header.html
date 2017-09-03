@@ -46,7 +46,9 @@
                     </div>
                 </li>
                 <li id="nav-add-new">
-                    <button type="button" class="btn btn-primary navbar-btn" ng-click="openRequestModal()"><strong>Request</strong></button>
+                    <button type="button" class="btn btn-primary navbar-btn" ng-click="openRequestModal()" ng-disabled="requestModalOpened">
+                        <strong>Request</strong>
+                    </button>
                 </li>
             </ul>
         </div>

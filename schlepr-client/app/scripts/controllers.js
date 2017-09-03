@@ -6,6 +6,7 @@ angular.module('schleprApp')
     function ($scope, $uibModal, $log, $state, $rootScope, AuthFactory) {
     $scope.isNavCollapsed = true;
     $scope.loginData = {};
+    $rootScope.requestModalOpened = false;
 
     $scope.openRegisterModal = function () {
         var registerModalInstance = $uibModal.open({
@@ -37,8 +38,9 @@ angular.module('schleprApp')
     };
 
     $scope.openRequestModal = function () {
+        $rootScope.requestModalOpened = true;
         var requestModalInstance = $uibModal.open({
-            templateUrl: 'views/new-request.html',
+            templateUrl: 'views/request.html',
             controller: 'NewRequestController',
             size: 'lg',
             windowClass: 'request-modal-z-index',
@@ -47,8 +49,10 @@ angular.module('schleprApp')
 
         requestModalInstance.result.then(function () {
             $log.info('New request modal closed at: ' + new Date());
+            $rootScope.requestModalOpened = false;
             }, function () {
                 $log.info('New request modal dismissed at: ' + new Date());
+                $rootScope.requestModalOpened = false;
             }
         );
     };
@@ -71,12 +75,11 @@ angular.module('schleprApp')
 .controller('NewRequestController', ['$scope', '$uibModalInstance', '$log', 'PackageFactory', 'AuthFactory',
     function ($scope, $uibModalInstance, $log, PackageFactory, AuthFactory) {
     $scope.package = {};
+    $scope.editMode = true;
 
-    $scope.doAddRequest = function() {
+    $scope.doSaveRequest = function() {
         $log.info('Doing add new request', $scope.package);
-        if($scope.tempDate) {
-            $scope.package.date = $scope.tempDate;
-        }
+
         $scope.package.postedBy = AuthFactory.getUserid();
         PackageFactory.save($scope.package);
         $uibModalInstance.close();
@@ -87,12 +90,88 @@ angular.module('schleprApp')
     };    
 }])
 
-.controller('HomeController', ['$scope', '$log', 'PackageFactory', function ($scope, $log, PackageFactory) {
+.controller('EditRequestController', ['$scope', '$uibModalInstance', '$log', 'PackageFactory',
+    function ($scope, $uibModalInstance, $log, PackageFactory) {
+
+    $scope.doSaveRequest = function() {
+        PackageFactory.update({id: $scope.$parent.package._id}, $scope.$parent.package, $scope.$parent.packageClone);
+        $uibModalInstance.close();
+    };
+
+    $scope.doDeleteRequest = function() {
+        PackageFactory.delete({id: $scope.$parent.package._id});
+        $uibModalInstance.close();
+    };
+
+    $scope.dismissThisDialog = function() {
+        $uibModalInstance.dismiss();
+    };
+
+    $scope.setEditMode = function() {
+        $scope.$parent.editMode = true;
+    };
+
+}])
+
+.controller('HomeController', ['$scope', '$rootScope', '$log', '$uibModal', 'PackageFactory', function ($scope, $rootScope, $log, $uibModal, PackageFactory) {
+    var getIndex = function(aPackage) {
+        // TODO: may need and index for faster lookup
+        var index = -1;
+        $scope.packages.map(function(item, i) {
+            if(item._id === aPackage._id) {
+                index = i;
+            }
+        });
+        return index;
+    };
+
     $scope.packages = PackageFactory.query();
     $log.info($scope.packages);
 
     $scope.$on('save:Successful', function (event, newPackage) {
         $scope.packages.unshift(newPackage);
     });
+
+    // successful updates are taken care of automatically because of binding to template via ng-model
+    $scope.$on('update:unSuccessful', function (event, packageClone) {
+        var index = getIndex(packageClone);
+        if(index > -1) {
+            $scope.packages[index] = packageClone;
+        }
+    });
+
+    $scope.$on('delete:Successful', function (event, deletedPackage) {
+        var index = getIndex(deletedPackage);
+        if(index > -1){
+            $scope.packages.splice(index, 1);
+        }
+    });
+
+    $scope.onRequestClicked = function (index) {
+        $rootScope.requestModalOpened = true;
+        var parentScope = $rootScope.$new();
+        parentScope.package = $scope.packages[index];
+        parentScope.package.date = new Date(parentScope.package.date);
+        parentScope.packageClone = PackageFactory.getClone(parentScope.package); // use to revert to old state; in event of error during update
+        parentScope.editMode = false;
+
+        var requestModalInstance = $uibModal.open({
+            templateUrl: 'views/request.html',
+            controller: 'EditRequestController',
+            scope: parentScope,
+            size: 'lg',
+            windowClass: 'request-modal-z-index',
+            backdropClass: 'request-modal-backdrop-z-index'
+        });
+
+        requestModalInstance.result.then(function () {
+            $log.info('Edit request modal closed at: ' + new Date());
+            $rootScope.requestModalOpened = false;
+            }, function () {
+                $log.info('Edit request modal dismissed at: ' + new Date());
+                $rootScope.requestModalOpened = false;
+            }
+        );
+    };
 }])
 ;

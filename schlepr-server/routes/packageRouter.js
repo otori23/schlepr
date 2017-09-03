@@ -5,6 +5,17 @@ var mongoose = require('mongoose');
 var Packages = require('../models/packages');
 var Verify = require('./verify');
 
+var verifyUserOfPost = function (req, res, next) {
+    Packages.findById(req.params.packageId, function (err, package) {
+        if (package.postedBy.toString() !== req.decoded._id) {
+            var err = new Error('You are not authorized to perform this operation!');
+            err.status = 403;
+            return next(err);
+        }
+        next();
+    });
+};
+
 var packageRouter = express.Router();
 packageRouter.use(bodyParser.json());
 
@@ -48,7 +59,8 @@ packageRouter.route('/:packageId')
         res.json(package);
     });
 })
-.put(Verify.verifyOrdinaryUser, function (req, res, next) {
+// TODO: find a way not to visit the datebase twice
+.put(Verify.verifyOrdinaryUser, verifyUserOfPost, function (req, res, next) {
     Packages.findByIdAndUpdate(req.params.packageId, {
         $set: req.body
     }, {
@@ -59,8 +71,10 @@ packageRouter.route('/:packageId')
         res.json(package);
     });
 })
-.delete(Verify.verifyOrdinaryUser, function (req, res, next) {
-        Packages.findByIdAndRemove(req.params.packageId, function (err, resp) {
+// TODO: find a way not to visit the datebase twice; also reuse the middleware from put
+.delete(Verify.verifyOrdinaryUser, verifyUserOfPost, function (req, res, next) {
+    Packages.findByIdAndRemove(req.params.packageId, function (err, resp) {
+        console.log("Here?");
         if (err) return next(err);
         debug('Delete package with id: ' + req.params.packageId);
         res.json(resp);

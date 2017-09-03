@@ -211,5 +211,16 @@ console.log(util.inspect(myObject, {showHidden: false, depth: null}))
 // alternative shortcut
 console.log(util.inspect(myObject, false, null))
 
+ng-class="{schelper-post-shadow: package.postedBy._id === $root.user_id}"
 
+18) Creating a new Scope in Angular 1.6
+https://docs.angularjs.org/api/ng/type/$rootScope.Scope
+
+var parent = $rootScope;
+var child = parent.$new();
+
+19) Client Side Javascript - Delete Object Property
+
+delete object.property
+delete object['property']
 

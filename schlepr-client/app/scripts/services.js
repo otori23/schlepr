@@ -188,6 +188,80 @@ angular.module('schleprApp')
     return packageResource.query();
   };
 
+  packageFac.update = function(packageIdData, packageData, packageDataClone) {
+    packageResource
+    .update(packageIdData, packageData).$promise.then(
+      function(response) {
+          var message =
+          '<div class="modal-header">' +
+          '<h3 class="modal-title id="modal-title-request">Success!</h3>' +
+          '</div>' +
+          '<div class="modal-body" id="modal-body-request">' + 
+          '<p>' +  "All good. Your request was updated!"  + '</p>' +
+          '</div>' +
+          '<div class="modal-footer">' +
+          '<button type="button" class="btn btn-primary" ng-click=$close()>OK</button>' +
+          '</div>';
+
+          $uibModal.open({ template: message, backdrop: false });
+      },
+      function(response) {
+        $rootScope.$broadcast('update:unSuccessful', packageDataClone);
+          var message =
+          '<div class="modal-header">' +
+          '<h3 class="modal-title id="modal-title-request">Unable to Save Your Request!</h3>' +
+          '</div>' +
+          '<div class="modal-body" id="modal-body-request">' + 
+          '<p>' +  "There was an error updating your request to server!"  + '</p>' +
+          '</div>' +
+          '<div class="modal-footer">' +
+          '<button type="button" class="btn btn-primary" ng-click=$close()>OK</button>' +
+          '</div>';
+
+          $uibModal.open({ template: message, backdrop: false });
+      }
+    );
+  };
+
+  packageFac.delete = function(packageData) {
+    packageResource
+    .delete(packageData,
+      function(response) {
+          $rootScope.$broadcast('delete:Successful', response);
+          var message =
+          '<div class="modal-header">' +
+          '<h3 class="modal-title id="modal-title-request">Success!</h3>' +
+          '</div>' +
+          '<div class="modal-body" id="modal-body-request">' + 
+          '<p>' +  "All good. Your request was deleted!"  + '</p>' +
+          '</div>' +
+          '<div class="modal-footer">' +
+          '<button type="button" class="btn btn-primary" ng-click=$close()>OK</button>' +
+          '</div>';
+
+          $uibModal.open({ template: message, backdrop: false });
+      },
+      function(response) {
+          var message =
+          '<div class="modal-header">' +
+          '<h3 class="modal-title id="modal-title-request">Unable to Save Your Request!</h3>' +
+          '</div>' +
+          '<div class="modal-body" id="modal-body-request">' + 
+          '<p>' +  "There was an error deleting your request on the server!"  + '</p>' +
+          '</div>' +
+          '<div class="modal-footer">' +
+          '<button type="button" class="btn btn-primary" ng-click=$close()>OK</button>' +
+          '</div>';
+
+          $uibModal.open({ template: message, backdrop: false });
+      }
+    );
+  };
+
+  packageFac.getClone = function(packageData) {
+    return new packageResource(packageData);
+  };
+
   return packageFac;
 }])
 ;

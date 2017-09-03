@@ -10,15 +10,16 @@
     <div class="row schlepr-main">
         <ul class="media-list col-sm-6 col-sm-offset-3 schlepr-post-list">
             <li class="media schlepr-post" 
-                ng-repeat="package in packages | filter:$root.filterText" 
-                ng-class="{'schelper-post-shadow': package.postedBy._id === $root.user_id}">
+                ng-repeat="package in packages | filter:$root.filterText"
+                ng-class="{'schelper-post-shadow': package.postedBy._id === $root.user_id}"
+                ng-click="onRequestClicked($index)">
                 <div class="media-left">
                     <span class="glyphicon glyphicon-user"></span>
                 </div>
                 <div class="media-body">
                     <h2 class="media-heading schlepr-post-title">{{package.title}} <small>&#183; {{package.postedBy.username}}</small></h2>
                     <p class="schlepr-post-meta">by {{package.date}}</p>
-                    <p>{{package.detail}}</p> 
+                    <p class="schlepr-post-detail">{{package.detail}}</p> 
                 </div>
             </li>
         </div>
