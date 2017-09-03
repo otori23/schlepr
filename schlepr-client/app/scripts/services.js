@@ -174,6 +174,10 @@ angular.module('schleprApp')
     );
   };
 
+  packageFac.query = function() {
+    return packageResource.query();
+  };
+
   return packageFac;
 }])
 ;
