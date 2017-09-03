@@ -70,6 +70,7 @@ Entry.get({ id: $scope.id }, function(data) {
 - had trouble getting google places and moment date picker to work well with the modal
 - google places: had to use custom CSS to set z-index for modal and its backdrop (make lower so can see other things on top of it)
 - moment.js date/time picker : just could not get this to show properly; so used a standard html5 input type <input type="datetime-local">
+- because I messed with the z-roder of the "Add Request" modal, had to use top margin to move it down some so that it is not covered by nav-bar
 
 5) $log
 
@@ -169,28 +170,20 @@ https://github.com/lykmapipo/mongoose-gridfs
 
 - writing angular 1.6 directives ?
 
-
-
-{
-	"username" : "jane_doe",
-	"password" : "12345"
-}
-
-[{"key":"x-access-token","value":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImphbmVfZG9lIiwiX2lkIjoiNTlhMjY1ZmFjYTc1ZTQwZDA4NDE2NTkwIiwiYWRtaW4iOmZhbHNlLCJpYXQiOjE1MDQzMzMwNjYsImV4cCI6MTUwNDMzNjY2Nn0.VAYmyCVcHgV1QwajUz2CMkbIlDsSwLFnPTHvMlxPsrM","description":""}]
-
-{
-	"title": "Couch",
-	"from" : {
-		"address" :"address from",
-		"details" : {x: 10}
-	}
-	"to" : {
-		"address" :"address to",
-		"details" : {x: 20}
-	},
-	"detail": "move detials"
-}
-
 13) Mongoose Schema Built-in required validator
 
 - failing required validation sends back an html response "500 Internal Server Error"; can't show another modal.
+
+14) Displaying Posts
+
+- Bootstrap 3 Blog Template Example + Medial List
+
+Middle Dot (&#183;) - https://www.toptal.com/designers/htmlarrows/punctuation/middle-dot/
+
+15) 'resolve' in stateProvider
+
+- seems to have been broken in Angular 1.6; how can we fix this ?
+
+https://github.com/angular/angular.js/issues/15545
+https://github.com/angular/angular.js/blob/master/CHANGELOG.md
+(search for phrase: "If you don't have time to migrate the code at the moment")

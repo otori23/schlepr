@@ -11,7 +11,7 @@ packageRouter.use(bodyParser.json());
 packageRouter.route('/')
 .get(function (req, res, next) {
     Packages.find(req.query)
-    .populate('postedBy')
+    .populate('postedBy', 'username firstname lastname rating')
     .populate('comments.postedBy')
     .exec(function (err, packages) {
         if (err) return next(err);
