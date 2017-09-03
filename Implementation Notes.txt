@@ -155,7 +155,7 @@ https://dinosaurscode.xyz/nodejs/2016/04/12/how-to-upload-images-to-mongodb-usin
 - uses gridfs stream in example
 - note: no mongoose at this point
 
-10#) mongoose-gridfs - builds in gridfs-stream
+10e.2) mongoose-gridfs - builds in gridfs-stream
 https://github.com/lykmapipo/mongoose-gridfs
 
 - wrap gridfs-stream to provide valid mongoose schema and model to use with MongoDB GridFS
@@ -187,3 +187,29 @@ Middle Dot (&#183;) - https://www.toptal.com/designers/htmlarrows/punctuation/mi
 https://github.com/angular/angular.js/issues/15545
 https://github.com/angular/angular.js/blob/master/CHANGELOG.md
 (search for phrase: "If you don't have time to migrate the code at the moment")
+
+16) Mongoose Sorting Date Example 
+
+As of 4.1.x, Any of these will work: 
+https://stackoverflow.com/questions/5825520/in-mongoose-how-do-i-sort-by-date-node-js
+
+Room.find({}).sort('-date').exec(function(err, docs) { ... });
+Room.find({}).sort({date: -1}).exec(function(err, docs) { ... });
+Room.find({}).sort({date: 'desc'}).exec(function(err, docs) { ... });
+Room.find({}).sort({date: 'descending'}).exec(function(err, docs) { ... });
+Room.find({}).sort([['date', -1]]).exec(function(err, docs) { ... });
+Room.find({}, null, {sort: '-date'}, function(err, docs) { ... });
+Room.find({}, null, {sort: {date: -1}}, function(err, docs) { ... });
+
+17) Printing Objects in Node.js
+https://stackoverflow.com/questions/10729276/how-can-i-get-the-full-object-in-node-jss-console-log-rather-than-object
+
+const util = require('util')
+
+console.log(util.inspect(myObject, {showHidden: false, depth: null}))
+
+// alternative shortcut
+console.log(util.inspect(myObject, false, null))
+
+
+

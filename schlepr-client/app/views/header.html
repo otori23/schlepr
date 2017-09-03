@@ -12,7 +12,7 @@
         </div>
 
         <div class="navbar-collapse collapse" uib-collapse="isNavCollapsed">
-            <form class="navbar-form navbar-right" ng-submit="doLogin()" ng-if="!loggedIn">
+            <form class="navbar-form navbar-right" ng-submit="doLogin()" ng-if="!isAuthenticated">
                 <div class="form-group">
                     <input type="text" placeholder="Username" class="form-control" id="username" ng-model="loginData.username">
                 </div>
@@ -24,11 +24,11 @@
                     <a ng-click="openRegisterModal()" href="#">Register</a>
                 </div>
             </form>
-            <ul class="nav navbar-nav navbar-right" ng-if="loggedIn">
+            <ul class="nav navbar-nav navbar-right" ng-if="isAuthenticated">
                 <li>
                     <form class="navbar-form">
                     <div class="form-group has-feedback">
-                        <input type="text" class="form-control" placeholder="Search">
+                        <input type="text" class="form-control" placeholder="Search" ng-model="$root.filterText">
                         <span class="glyphicon glyphicon-search form-control-feedback" aria-hidden="true"></span>
                     </div>
                     </form>

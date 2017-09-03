@@ -13,6 +13,7 @@ packageRouter.route('/')
     Packages.find(req.query)
     .populate('postedBy', 'username firstname lastname rating')
     .populate('comments.postedBy')
+    .sort('-date')
     .exec(function (err, packages) {
         if (err) return next(err);
         debug("Find query: " + req.query);
@@ -22,8 +23,10 @@ packageRouter.route('/')
 .post(Verify.verifyOrdinaryUser, function (req, res, next) {
     Packages.create(req.body, function (err, package) {
         if (err) return next(err);
-        debug('Package created: ' + package._id);
-        res.json(package);
+        Packages.populate(package, { path: 'postedBy', model: 'User', select: 'username firstname lastname rating'}, function (err, package) {
+            if (err) return next(err);
+            res.json(package);
+        });
     });
 })
 .delete(Verify.verifyOrdinaryUser, Verify.verifyAdminUser, function (req, res, next) {

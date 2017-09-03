@@ -27,21 +27,27 @@ angular.module('schleprApp', ['ngResource', 'ui.bootstrap', 'ui.router', 'ngAuto
 
     $urlRouterProvider.otherwise('/'); 
 }])
-
 .run(['$rootScope', 'AuthFactory', function($rootScope, AuthFactory) {
+    $rootScope.isAuthenticated = AuthFactory.isAuthenticated();
+    $rootScope.username = AuthFactory.getUsername();
+    $rootScope.user_id = AuthFactory.getUserid(); 
+
     $rootScope.$on('login:Successful', function () {
-        $rootScope.loggedIn = AuthFactory.isAuthenticated();
+        $rootScope.isAuthenticated = AuthFactory.isAuthenticated();
         $rootScope.username = AuthFactory.getUsername();
+        $rootScope.user_id = AuthFactory.getUserid(); 
     });
         
     $rootScope.$on('registration:Successful', function () {
-        $rootScope.loggedIn = AuthFactory.isAuthenticated();
+        $rootScope.isAuthenticated = AuthFactory.isAuthenticated();
         $rootScope.username = AuthFactory.getUsername();
+        $rootScope.user_id = AuthFactory.getUserid(); 
     });
 
     $rootScope.$on('logout:Successful', function () {
-        $rootScope.loggedIn = AuthFactory.isAuthenticated();
+        $rootScope.isAuthenticated = AuthFactory.isAuthenticated();
         $rootScope.username = AuthFactory.getUsername();
+        $rootScope.user_id = AuthFactory.getUserid(); 
     });
 }])
 ;

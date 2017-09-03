@@ -2,10 +2,10 @@
 
 angular.module('schleprApp')
 
-.controller('HeaderController', ['$scope', '$uibModal', '$log', '$state', '$rootScope', '$localStorage', 'AuthFactory', 
-    function ($scope, $uibModal, $log, $state, $rootScope, $localStorage, AuthFactory) {
+.controller('HeaderController', ['$scope', '$uibModal', '$log', '$state', '$rootScope', 'AuthFactory', 
+    function ($scope, $uibModal, $log, $state, $rootScope, AuthFactory) {
     $scope.isNavCollapsed = true;
-    $scope.loginData = $localStorage.getObject('userinfo','{}');
+    $scope.loginData = {};
 
     $scope.openRegisterModal = function () {
         var registerModalInstance = $uibModal.open({
@@ -23,9 +23,6 @@ angular.module('schleprApp')
 
     $scope.doLogin = function() {
         $log.info('Do login: ' + new Date());
-        if($scope.rememberMe) {
-            $localStorage.storeObject('userinfo',$scope.loginData);
-        }
         AuthFactory.login($scope.loginData);
     };
     
@@ -71,8 +68,8 @@ angular.module('schleprApp')
     };
 }])
 
-.controller('NewRequestController', ['$scope', '$uibModalInstance', '$log', 'PackageFactory', 
-    function ($scope, $uibModalInstance, $log, PackageFactory) {
+.controller('NewRequestController', ['$scope', '$uibModalInstance', '$log', 'PackageFactory', 'AuthFactory',
+    function ($scope, $uibModalInstance, $log, PackageFactory, AuthFactory) {
     $scope.package = {};
 
     $scope.doAddRequest = function() {
@@ -80,6 +77,7 @@ angular.module('schleprApp')
         if($scope.tempDate) {
             $scope.package.date = $scope.tempDate;
         }
+        $scope.package.postedBy = AuthFactory.getUserid();
         PackageFactory.save($scope.package);
         $uibModalInstance.close();
     };
@@ -92,5 +90,9 @@ angular.module('schleprApp')
 .controller('HomeController', ['$scope', '$log', 'PackageFactory', function ($scope, $log, PackageFactory) {
     $scope.packages = PackageFactory.query();
     $log.info($scope.packages);
+
+    $scope.$on('save:Successful', function (event, newPackage) {
+        $scope.packages.unshift(newPackage);
+    });
 }])
 ;
